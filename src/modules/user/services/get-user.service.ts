@@ -8,6 +8,12 @@ export class GetUserService {
         private databaseService: PrismaService
     ) { }
 
+    async query(email: string) {
+        const user = await this.databaseService.user.findUnique({ where: { email } });
+        this.logger.log('retrieved user details')
+        return user;
+    }
+
     async exist(email: string) {
         return !!(await this.databaseService.user.count({ where: { email } }));
     }

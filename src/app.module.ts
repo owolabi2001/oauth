@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database';
 import { ControllerModule } from './modules';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
@@ -11,7 +12,8 @@ import { ControllerModule } from './modules';
       isGlobal: true,
     }),
     DatabaseModule,
-    ControllerModule
+    ControllerModule,
+    PassportModule.register({ session: true })
   ],
   controllers: [AppController],
   providers: [AppService],
