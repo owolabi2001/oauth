@@ -1,7 +1,8 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { JwtAuthGuard } from './modules/auth/guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { AuthUser } from './common';
+import { User } from '@prisma/client';
 
 @Controller()
 export class AppController {
@@ -9,7 +10,7 @@ export class AppController {
 
   @Get()
   @ApiBearerAuth()
-  getHello(): string {
+  getHello(@AuthUser() user: User): string {
     return this.appService.getHello();
   }
 }
