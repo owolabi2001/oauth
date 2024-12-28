@@ -5,8 +5,6 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerDocumentOptions, SwaggerModule } from '@nestjs/swagger';
 import { EnvironmentConstants } from './common/constants';
-import * as passport from 'passport'
-import * as session from 'express-session';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -21,19 +19,7 @@ async function bootstrap() {
       transform: true
     }),
   );
-  app.use(
-    session({
-      secret: 'my-secret-should-be-from-env-tho',
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        maxAge: 60000,
-      }
-    }),
-  );
 
-  app.use(passport.initialize())
-  app.use(passport.session())
   const configService = app.get(ConfigService);
   const logger = new Logger();
 

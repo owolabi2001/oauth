@@ -1,20 +1,32 @@
 import { Module } from "@nestjs/common";
-import { AuthController } from "./auth.controller";
 import { GoogleStrategy } from "./strategy";
-import { AuthService } from "./services";
+import { AuthController } from "./auth.controller";
+import { CallbackService, GenerateTokenService } from "./services";
+import { JwtModule } from "@nestjs/jwt";
+import { ConfigService } from "@nestjs/config";
+import { EnvironmentConstants } from "src/common";
 import { UserModule } from "../user";
-import { SessionSerializer } from "./serializer";
+import { PassportModule } from "@nestjs/passport";
 
 @Module({
-    imports: [UserModule],
-    controllers: [AuthController],
+    imports: [
+        PassportModule,
+        UserModule,
+        JwtModule.registerAsync({
+            inject: [ConfigService],
+            useFactory: async (configService: ConfigService) => {
+                return {
+                    secret: configService.get<string>(EnvironmentConstants.jwtSecret),
+                    signOptions: { expiresIn: '7d' },
+                }
+            }
+        })
+    ],
     providers: [
         GoogleStrategy,
-        SessionSerializer,
-        {
-            provide: 'AUTH_SERVICE',
-            useClass: AuthService
-        }
-    ]
+        GenerateTokenService,
+        CallbackService
+    ],
+    controllers: [AuthController]
 })
 export class AuthModule { }
