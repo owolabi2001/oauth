@@ -1,2 +1,2 @@
-export * from './auth.service'
-export * from './types'
+export * from './generate-token.service'
+export * from './callback.service'

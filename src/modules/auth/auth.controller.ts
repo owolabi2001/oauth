@@ -1,21 +1,22 @@
-import { Controller, Get, UseGuards } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
-import { GoogleAuthGuard } from "./guards";
+import { Controller, Get, Req, UseGuards } from "@nestjs/common";
+import { GoogleGuard } from "./guard";
+import { CallbackService, GenerateTokenService } from "./services";
 
-@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
+    constructor(
+        private readonly callbackService: CallbackService
+    ) { }
 
     @Get('google/login')
-    @UseGuards(GoogleAuthGuard)
-    handleLogin() {
-        // this method redirects user to the google oauth screen
+    @UseGuards(GoogleGuard)
+    oauthLogin() {
 
     }
 
     @Get('google/callback')
-    @UseGuards(GoogleAuthGuard)
-    handleRedirect() {
-
+    @UseGuards(GoogleGuard)
+    async oauthCallback(@Req() res: any) {
+        return this.callbackService.execute(res)
     }
-} 
+}
