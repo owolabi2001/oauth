@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { GoogleStrategy } from "./strategy";
+import { GoogleStrategy, JwtStrategy } from "./strategy";
 import { AuthController } from "./auth.controller";
 import { CallbackService, GenerateTokenService } from "./services";
 import { JwtModule } from "@nestjs/jwt";
@@ -18,6 +18,7 @@ import { PassportModule } from "@nestjs/passport";
                 return {
                     secret: configService.get<string>(EnvironmentConstants.jwtSecret),
                     signOptions: { expiresIn: '7d' },
+                    global: true
                 }
             }
         })
@@ -25,7 +26,8 @@ import { PassportModule } from "@nestjs/passport";
     providers: [
         GoogleStrategy,
         GenerateTokenService,
-        CallbackService
+        CallbackService,
+        JwtStrategy
     ],
     controllers: [AuthController]
 })
